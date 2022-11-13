@@ -1,0 +1,77 @@
+from accounts.models import *
+from news.models import *
+
+user1=CustomUser(first_name='Petr', last_name='Petrov', email='petrovpp@mail.ru', username='Petrov_petr') 
+user1.save()
+user2=CustomUser(first_name='Ivan', last_name='Ivanov', email='ivanovii@mail.ru', username='Ivanov_ivan') 
+user2.save()
+
+Author1=Author(rating=0, user=user2) 
+Author1.save()
+Author2=Author(rating=0, user=user1) 
+Author2.save()
+
+category1=Category.objects.create(name='Спорт') 
+category2=Category.objects.create(name='Видеоигры')  
+category3=Category.objects.create(name='Музыка') 
+category4=Category.objects.create(name='Красота и здоровье') 
+
+post1=Post.objects.create(title='Допинг-дело Валиевой передали в CAS', text='Всемирное антидопинговое агентство приняло такое решение, поскольку, по утверждению его представителей, РУСАДА отказалось передавать ему результаты расследования по делу россиянки', type=False, author=Author2)
+post1.category.add(category1)
+
+post2=Post.objects.create(title='Самые лучшие песни за всю историю игр', text="В этой подборке мы собрали лучшие песни из игр, вышедших за последние двадцать пять лет, то есть с того самого момента, когда качественный звук пришел на смену пищанию спикера. Для простоты мы объединили песни и вокализ (пение без слов). American McGee's Alice Саундтрек к одной из лучших игр 2000 года написал Крис Вренна, бывший участник Nine Inch Nails. Музыка получилась под стать игре — проникновенная, меланхоличная и запоминающаяся с первого прослушивания Alan Wake В Alan Wake не было такой надрывной и запоминающейся музыки, как в Max Payne, но была неплохая песня американской певицы Аноми Белль. Интересно, что Белль одно время гастролировала с Густаво Сантаолальей (автором музыки к схожей по настроению игре The Last of Us), родом она из Орегона, что по соседству с местом действия Alan Wake. Assassin's Creed 2 / Assassin’s Creed: Syndicate Assassin’s Creed, как правило, музыка функциональна и мало подходит для отдельного прослушивания. Но в Assassin’s Creed 2 и Assassin’s Creed:Syndicate есть несколько исключений.", type=True, author=Author2) 
+post2.category.add(category2)        
+post2.category.add(category3) 
+
+post3=Post.objects.create(title='Повысить градус: уход за кожей лица зимой', text="В холодное время года клетки кожи медленнее отшелушиваются, делая текстуру кожи неоднородной. Это приводит к задержке на коже себума (кожного сала), росту количества бактерий и, как следствие, воспалениям на лице. Именно поэтому в каждый из сезонов, в том числе, в холодное время года, необходимо скорректировать уход за кожей точно так же, как каждые несколько месяцев вы меняете гардероб. Как и одежду, средства по уходу за кожей нужно выбирать вдумчиво, понимая цели и систему их использования. Существует семь главных правил ухода за кожей зимой. 1. Используйте мягкие отшелушивающие средства. 2. Используйте крема и сыворотки с витамином С. 3. Обеспечьте коже постоянное увлажнение. 4. Смените текстуру очищающего средства для лица. 5. Скорректируйте уход за проблемной кожей. 6. Используйте средства с SPF даже в пасмурную погоду. 7. Пересмотрите уход за кожей губ, рук и тела.", type=True, author=Author1) 
+post3.category.add(category4)                                                                                                                       
+post3.save() 
+
+comment1=Comment.objects.create(text='Ну все, отберут медаль', post=post1, author=Author1)
+comment2=Comment.object.create(text='Да ничего не отберут, все будет хорошо', post=post1, author=Author2) 
+comment3=Comment.objects.create(text='Nine Inch Nails - классная группа!', post=post2, author=Author1)
+comment4=Comment.objects.create(text='Своевременно', post=post3, author=Author2) 
+     
+comment1.like()
+comment2.like()
+comment2.like()
+comment3.like()
+comment3.like()
+comment3.like()
+comment3.like()
+comment4.like() 
+comment4.like()
+comment4.like()
+comment4.like()
+comment4.like()
+comment4.like()
+
+post1.like()
+post1.like()
+post1.like()
+post1.like()
+post1.like()
+post1.like()
+post1.like()
+post1.like()
+post2.like()
+post2.like()
+post2.like()
+post2.like()
+post2.like()
+post2.like()
+post3.like()
+post3.like()
+post3.like()
+post3.like()
+
+Author1.update_rating()
+Author2.update_rating() 
+
+Author.objects.all().order_by('-rating').values('user__username','rating')[0]
+
+Post.objects.all().order_by('-rating').values('title','create_time','rating','author__user__username')[0]           
+Post.objects.all().order_by('-rating')[0].preview() 
+
+best_post=Post.objects.all().order_by('-rating')[0]
+best_post.comment_set.all().values('text','create_time', 'rating', 'author__user__username') 
